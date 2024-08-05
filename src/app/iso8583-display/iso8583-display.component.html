@@ -1,0 +1,38 @@
+<div class="container">
+  <h1>ISO 8583 Message Processor</h1>
+  <div class="input-section">
+    <textarea [(ngModel)]="inputMessage" placeholder="Enter ISO 8583 message"></textarea>
+    <button (click)="processMessage()">Process Message</button>
+  </div>
+
+  <div class="output-section" *ngIf="processedMessage">
+    <h2>Processed Message</h2>
+    <div class="mti-info">
+      <h3>MTI: {{ processedMessage.mti }}</h3>
+      <p>Purpose: {{ processedMessage.mtiInfo?.messagePurpose }}</p>
+      <p>From: {{ processedMessage.mtiInfo?.from }}</p>
+      <p>To: {{ processedMessage.mtiInfo?.to }}</p>
+      <p>Usage: {{ processedMessage.mtiInfo?.usage }}</p>
+    </div>
+
+    <div class="bitmap-info">
+      <h3>Bitmap Information</h3>
+      <table>
+        <tr>
+          <th>Bit</th>
+          <th>Description</th>
+          <th>Value</th>
+        </tr>
+        <ng-container *ngFor="let bit of processedMessage.bitmapInfo">
+          <tr>
+            <td>{{ bit.bitNumber }}</td>
+            <td>{{ bit.description }}</td>
+            <td>{{ processedMessage.fields[bit.bitNumber] }}</td>
+          </tr>
+        </ng-container>
+      </table>
+
+
+    </div>
+  </div>
+</div>
