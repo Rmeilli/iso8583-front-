@@ -1,38 +1,45 @@
 <div class="container">
-  <h1>ISO 8583 Message Processor</h1>
-  <div class="input-section">
-    <textarea [(ngModel)]="inputMessage" placeholder="Enter ISO 8583 message"></textarea>
-    <button (click)="processMessage()">Process Message</button>
+  <h1 class="title">ISO 8583 Message Processor</h1>
+  <div class="card input-section">
+    <textarea [(ngModel)]="inputMessage" placeholder="Enter ISO 8583 message" class="message-input"></textarea>
+    <div class="button-group">
+      <button (click)="processMessage()" class="btn btn-process">Process Message</button>
+      <button (click)="generateReport()">Generate Report</button>
+     <!-- <button (click)="useExampleMessage()" class="btn btn-example">Use Example</button> -->
+    </div>
   </div>
 
   <div class="output-section" *ngIf="processedMessage">
-    <h2>Processed Message</h2>
-    <div class="mti-info">
-      <h3>MTI: {{ processedMessage.mti }}</h3>
-      <p>Purpose: {{ processedMessage.mtiInfo?.messagePurpose }}</p>
-      <p>From: {{ processedMessage.mtiInfo?.from }}</p>
-      <p>To: {{ processedMessage.mtiInfo?.to }}</p>
-      <p>Usage: {{ processedMessage.mtiInfo?.usage }}</p>
+    <div class="card mti-info">
+      <h2>MTI: {{ processedMessage.mti }}</h2>
+      <p><strong>Purpose:</strong> {{ processedMessage.mtiInfo.messagePurpose }}</p>
+      <p><strong>From:</strong> {{ processedMessage.mtiInfo.from }}</p>
+      <p><strong>To:</strong> {{ processedMessage.mtiInfo.to }}</p>
+      <p><strong>Usage:</strong> {{ processedMessage.mtiInfo.usage }}</p>
+     <p><strong>Created at:</strong> {{ formatDate(processedMessage.creationDate) }}</p>
     </div>
 
-    <div class="bitmap-info">
-      <h3>Bitmap Information</h3>
-      <table>
-        <tr>
-          <th>Bit</th>
-          <th>Description</th>
-          <th>Value</th>
-        </tr>
-        <ng-container *ngFor="let bit of processedMessage.bitmapInfo">
+
+    <div class="card bitmap-info">
+      <h2>Bitmap Information</h2>
+      <div class="table-container">
+        <table>
+          <thead>
           <tr>
+            <th>Bit</th>
+            <th>Description</th>
+            <th>Value</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let bit of processedMessage.bitmapInfo" class="bit-row">
             <td>{{ bit.bitNumber }}</td>
             <td>{{ bit.description }}</td>
-            <td>{{ processedMessage.fields[bit.bitNumber] }}</td>
+            <td>{{ bit.value }}</td>
           </tr>
-        </ng-container>
-      </table>
-
-
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

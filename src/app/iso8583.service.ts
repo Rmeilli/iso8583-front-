@@ -13,4 +13,7 @@ export class Iso8583Service {
   processMessage(message: string): Observable<any> {
     return this.http.post(this.apiUrl, message, { responseType: 'text' });
   }
-}
+
+  generateReport(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/report`, { responseType: 'blob' });
+}}

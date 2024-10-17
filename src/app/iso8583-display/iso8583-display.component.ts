@@ -19,7 +19,9 @@ interface ProcessedMessage {
   };
   fields: { [key: string]: string };
   bitmapInfo: BitmapInfo[];
+  creationDate: string;
 }
+
 
 @Component({
   selector: 'app-iso8583-display',
@@ -32,7 +34,8 @@ export class Iso8583DisplayComponent {
   inputMessage: string = '';
   processedMessage: ProcessedMessage | null = null;
 
-  constructor(private iso8583Service: Iso8583Service) {}
+  constructor(private iso8583Service: Iso8583Service) {
+  }
 
   processMessage() {
     this.iso8583Service.processMessage(this.inputMessage).subscribe(
@@ -60,10 +63,27 @@ export class Iso8583DisplayComponent {
     const bitmapInfo = this.processedMessage.bitmapInfo.find(info => info.bitNumber === parseInt(bitNumber));
     return bitmapInfo ? bitmapInfo.description : 'Unknown';
   }
+
   getAllBits() {
     if (this.processedMessage && this.processedMessage.bitmapInfo) {
       return this.processedMessage.bitmapInfo;
     }
     return [];
+  }
+
+  formatDate(date: string): string {
+    return new Date(date).toLocaleString();
+  }
+  generateReport() {
+    this.iso8583Service.generateReport().subscribe(
+      (response: Blob) => {
+        const file = new Blob([response], { type: 'application/pdf' });
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      },
+      error => {
+        console.error('Error generating report:', error);
+      }
+    );
   }
 }
